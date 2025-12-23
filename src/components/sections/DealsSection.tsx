@@ -1,38 +1,39 @@
 import { motion } from "framer-motion";
-import { Star, ArrowRight } from "lucide-react";
+import { Star, ArrowRight, Heart, Expand, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const deals = [
   {
     id: 1,
-    name: "Premium Office Chair",
-    category: "Office Furniture",
-    price: 349,
-    originalPrice: 699,
-    rating: 4.9,
-    reviews: 128,
-    description: "Ergonomic design with lumbar support for all-day comfort.",
+    name: "Recliner Chair Wood",
+    category: "Chair",
+    price: 105.00,
+    originalPrice: 150.00,
+    discount: 30,
+    rating: 5.0,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
     image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400&h=400&fit=crop",
   },
   {
     id: 2,
-    name: "Vintage Leather Sofa",
-    category: "Living Room",
-    price: 1499,
-    originalPrice: 2499,
-    rating: 4.8,
-    reviews: 89,
-    description: "Handcrafted genuine leather with classic design aesthetics.",
+    name: "Recliner Chair Steel",
+    category: "Chair",
+    price: 80.00,
+    originalPrice: 100.00,
+    discount: 20,
+    rating: 4.9,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
     image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&h=400&fit=crop",
   },
   {
     id: 3,
-    name: "Modern Dining Set",
-    category: "Dining Room",
-    price: 899,
-    originalPrice: 1299,
-    rating: 4.7,
-    reviews: 156,
-    description: "Complete 6-piece dining set with contemporary styling.",
+    name: "Modern Lounge Chair",
+    category: "Chair",
+    price: 120.00,
+    originalPrice: 160.00,
+    discount: 25,
+    rating: 4.8,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
     image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400&h=400&fit=crop",
   },
 ];
@@ -56,7 +57,7 @@ export const DealsSection = () => {
         </motion.div>
 
         {/* Deals Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {deals.map((deal, index) => (
             <motion.div
               key={deal.id}
@@ -64,67 +65,88 @@ export const DealsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
-              className="bg-card rounded-2xl overflow-hidden border border-border"
+              whileHover={{ y: -8 }}
+              className="bg-card rounded-2xl overflow-hidden border border-border flex flex-row group"
             >
-              {/* Image */}
-              <div className="aspect-[4/3] overflow-hidden">
-                <motion.img
+              {/* Image Section */}
+              <div className="relative w-[45%] min-h-[220px] bg-secondary overflow-hidden">
+                <img
                   src={deal.image}
                   alt={deal.name}
-                  className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+
+                {/* Discount Badge */}
+                <span className="absolute top-4 left-4 bg-accent text-accent-foreground px-3 py-1.5 rounded-full body-3-bold">
+                  {deal.discount}% off
+                </span>
+
+                {/* Action Icons */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+                  >
+                    <Heart className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+                  >
+                    <Expand className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
-              {/* Content */}
-              <div className="p-6">
-                <p className="body-3 text-accent mb-2">{deal.category}</p>
-                <h4 className="text-foreground mb-2">{deal.name}</h4>
-                
-                {/* Rating */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${
-                          i < Math.floor(deal.rating)
-                            ? "fill-cta text-cta"
-                            : "text-border"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="body-3 text-muted-foreground">
-                    ({deal.reviews} reviews)
-                  </span>
-                </div>
-
-                <p className="body-3 text-muted-foreground mb-4 line-clamp-2">
-                  {deal.description}
-                </p>
-
-                {/* Price */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[24px] font-bold text-foreground">
-                      ${deal.price}
+              {/* Content Section */}
+              <div className="flex-1 p-5 flex flex-col justify-between">
+                <div>
+                  {/* Category */}
+                  <p className="body-3 text-muted-foreground mb-1">{deal.category}</p>
+                  
+                  {/* Product Name */}
+                  <h4 className="text-foreground font-semibold mb-2">{deal.name}</h4>
+                  
+                  {/* Price */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg font-bold text-foreground">
+                      ${deal.price.toFixed(2)}
                     </span>
-                    <span className="body-2 text-muted-foreground line-through">
-                      ${deal.originalPrice}
+                    <span className="body-3 text-muted-foreground line-through">
+                      ${deal.originalPrice.toFixed(2)}
                     </span>
                   </div>
-                  <motion.a
-                    href="#"
-                    className="flex items-center gap-1 body-2-bold text-accent hover:gap-2 transition-all"
-                    whileHover={{ x: 4 }}
-                  >
-                    Shop Now
-                    <ArrowRight className="h-4 w-4" />
-                  </motion.a>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <Star className="w-4 h-4 fill-cta text-cta" />
+                    <span className="body-3 text-foreground font-medium">{deal.rating}</span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="body-3 text-muted-foreground line-clamp-3 mb-4">
+                    {deal.description}
+                  </p>
                 </div>
+
+                {/* Shop Now Link */}
+                <motion.a
+                  href="#"
+                  className="flex items-center gap-1 body-2-bold text-accent hover:gap-2 transition-all w-fit"
+                  whileHover={{ x: 4 }}
+                >
+                  Shop Now
+                  <ArrowRight className="h-4 w-4" />
+                </motion.a>
               </div>
             </motion.div>
           ))}
