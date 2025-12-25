@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,28 +26,29 @@ export const Navbar = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <motion.a
-            href="/"
-            className="text-2xl md:text-3xl font-bold text-foreground"
-            whileHover={{ scale: 1.02 }}
-          >
-            Furniva
-          </motion.a>
+          <motion.div whileHover={{ scale: 1.02 }}>
+            <Link to="/" className="text-2xl md:text-3xl font-bold text-foreground">
+              Furniva
+            </Link>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link, index) => (
-              <motion.a
+              <motion.div
                 key={link.name}
-                href={link.href}
-                className="body-2 text-muted-foreground hover:text-foreground transition-colors relative group"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300" />
-              </motion.a>
+                <Link
+                  to={link.href}
+                  className="body-2 text-muted-foreground hover:text-foreground transition-colors relative group"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300" />
+                </Link>
+              </motion.div>
             ))}
           </nav>
 
@@ -55,17 +57,23 @@ export const Navbar = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Heart className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to="/wishlist">
+                <Heart className="h-5 w-5" />
+              </Link>
             </Button>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  0
+                </span>
+              </Link>
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to="/account">
+                <User className="h-5 w-5" />
+              </Link>
             </Button>
 
             {/* Mobile Menu Button */}
@@ -93,27 +101,34 @@ export const Navbar = () => {
           >
             <nav className="container-custom py-4 flex flex-col gap-4">
               {navLinks.map((link, index) => (
-                <motion.a
+                <motion.div
                   key={link.name}
-                  href={link.href}
-                  className="body-1 text-foreground py-2"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  onClick={() => setIsOpen(false)}
                 >
-                  {link.name}
-                </motion.a>
+                  <Link
+                    to={link.href}
+                    className="body-1 text-foreground py-2 block"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
               <div className="flex gap-4 pt-4 border-t border-border">
                 <Button variant="ghost" size="icon">
                   <Search className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <Heart className="h-5 w-5" />
+                <Button variant="ghost" size="icon" asChild>
+                  <Link to="/wishlist" onClick={() => setIsOpen(false)}>
+                    <Heart className="h-5 w-5" />
+                  </Link>
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
+                <Button variant="ghost" size="icon" asChild>
+                  <Link to="/account" onClick={() => setIsOpen(false)}>
+                    <User className="h-5 w-5" />
+                  </Link>
                 </Button>
               </div>
             </nav>
