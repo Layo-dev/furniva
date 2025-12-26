@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Expand, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -21,14 +22,14 @@ interface ShopProductCardProps {
 
 const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -8 }}
-      className="bg-card rounded-2xl overflow-hidden border border-border group"
-    >
+    <Link to={`/product/${product.id}`}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: index * 0.05 }}
+        whileHover={{ y: -8 }}
+        className="bg-card rounded-2xl overflow-hidden border border-border group">
       {/* Image Container */}
       <div className="relative aspect-square bg-secondary overflow-hidden">
         <img
@@ -110,6 +111,7 @@ const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
         </div>
       </div>
     </motion.div>
+    </Link>
   );
 };
 
