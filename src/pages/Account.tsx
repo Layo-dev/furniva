@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -9,25 +9,49 @@ import AccountOrders from "@/components/account/AccountOrders";
 import AccountAddresses from "@/components/account/AccountAddresses";
 import AccountPayment from "@/components/account/AccountPayment";
 import AccountPassword from "@/components/account/AccountPassword";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
     { label: "My Account" },
   ];
 
-  const handleTabChange = (tab: string) => {
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
+
+  const handleTabChange = async (tab: string) => {
     if (tab === "logout") {
+      await signOut();
       toast.success("Logged out successfully");
       navigate("/");
       return;
     }
     setActiveTab(tab);
   };
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
 
   const renderContent = () => {
     switch (activeTab) {

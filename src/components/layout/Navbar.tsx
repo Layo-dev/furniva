@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.svg";
 
 const navLinks = [
@@ -16,6 +17,10 @@ const navLinks = [
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+
+  // Guest goes to /auth, logged in user goes to /account
+  const accountLink = user ? "/account" : "/auth";
 
   return (
     <motion.header
@@ -72,7 +77,7 @@ export const Navbar = () => {
               </Link>
             </Button>
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
-              <Link to="/account">
+              <Link to={accountLink}>
                 <User className="h-5 w-5" />
               </Link>
             </Button>
@@ -127,7 +132,7 @@ export const Navbar = () => {
                   </Link>
                 </Button>
                 <Button variant="ghost" size="icon" asChild>
-                  <Link to="/account" onClick={() => setIsOpen(false)}>
+                  <Link to={accountLink} onClick={() => setIsOpen(false)}>
                     <User className="h-5 w-5" />
                   </Link>
                 </Button>
