@@ -2,9 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Expand, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import ProductImageDialog from "@/components/product/ProductImageDialog";
 
 const filters = ["All Products", "Latest Products", "Best Sellers", "Featured Products"];
 
@@ -103,6 +103,7 @@ export const ProductsSection = () => {
   const [activeFilter, setActiveFilter] = useState("All Products");
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const navigate = useNavigate();
 
   return (
     <section className="py-16 md:py-24 bg-background">
@@ -216,15 +217,18 @@ export const ProductsSection = () => {
                       />
                     </Button>
                     
-                    <ProductImageDialog
-                      image={product.image}
-                      productName={product.name}
-                      trigger={
-                        <Button size="icon" variant="secondary" className="rounded-full">
-                          <Expand className="h-4 w-4" />
-                        </Button>
-                      }
-                    />
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="rounded-full"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigate(`/product/${product.id}`);
+                      }}
+                    >
+                      <Expand className="h-4 w-4" />
+                    </Button>
                     
                     <Button
                       size="icon"

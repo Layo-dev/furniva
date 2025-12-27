@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { Heart, Expand, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import ProductImageDialog from "@/components/product/ProductImageDialog";
 import { toast } from "sonner";
 
 interface Product {
@@ -27,6 +26,7 @@ interface ShopProductCardProps {
 const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const navigate = useNavigate();
   const inWishlist = isInWishlist(product.id.toString());
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -115,19 +115,18 @@ const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
             <Heart className={`w-4 h-4 ${inWishlist ? "fill-current" : ""}`} />
           </Button>
           
-          <ProductImageDialog
-            image={product.image}
-            productName={product.name}
-            trigger={
-              <Button
-                size="icon"
-                variant="secondary"
-                className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
-              >
-                <Expand className="w-4 h-4" />
-              </Button>
-            }
-          />
+          <Button
+            size="icon"
+            variant="secondary"
+            className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/product/${product.id}`);
+            }}
+          >
+            <Expand className="w-4 h-4" />
+          </Button>
           
           <Button
             size="icon"
