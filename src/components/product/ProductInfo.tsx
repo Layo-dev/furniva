@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ColorSelector from "./ColorSelector";
 import QuantitySelector from "@/components/cart/QuantitySelector";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductInfoProps {
   product: {
+    id: number;
     name: string;
     category: string;
     price: number;
@@ -16,12 +18,27 @@ interface ProductInfoProps {
     colors: string[];
     sku: string;
     tags: string[];
+    images?: string[];
   };
 }
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = async () => {
+    await addToCart(
+      {
+        product_id: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0] || "",
+        color: selectedColor,
+      },
+      quantity
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -86,7 +103,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           onIncrement={() => setQuantity((q) => q + 1)}
           onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
         />
-        <Button className="flex-1 bg-cta text-cta-foreground hover:bg-cta/90">
+        <Button 
+          onClick={handleAddToCart}
+          className="flex-1 bg-cta text-cta-foreground hover:bg-cta/90"
+        >
           Add to Cart
         </Button>
         <Button className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90">

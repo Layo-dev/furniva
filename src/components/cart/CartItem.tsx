@@ -4,9 +4,10 @@ import QuantitySelector from "./QuantitySelector";
 import { Button } from "@/components/ui/button";
 
 export interface CartItemData {
-  id: number;
+  id: string;
+  product_id: string;
   name: string;
-  color: string;
+  color?: string;
   price: number;
   quantity: number;
   image: string;
@@ -14,8 +15,8 @@ export interface CartItemData {
 
 interface CartItemProps {
   item: CartItemData;
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  onRemove: (id: number) => void;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (productId: string) => void;
 }
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
@@ -39,7 +40,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           </div>
           <div>
             <h4 className="font-medium">{item.name}</h4>
-            <p className="text-sm text-muted-foreground">Color: {item.color}</p>
+            {item.color && (
+              <p className="text-sm text-muted-foreground">Color: {item.color}</p>
+            )}
           </div>
         </div>
       </td>
@@ -50,8 +53,8 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <div className="flex justify-center">
           <QuantitySelector
             quantity={item.quantity}
-            onIncrement={() => onUpdateQuantity(item.id, item.quantity + 1)}
-            onDecrement={() => onUpdateQuantity(item.id, item.quantity - 1)}
+            onIncrement={() => onUpdateQuantity(item.product_id, item.quantity + 1)}
+            onDecrement={() => onUpdateQuantity(item.product_id, item.quantity - 1)}
           />
         </div>
       </td>
@@ -62,7 +65,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => onRemove(item.id)}
+          onClick={() => onRemove(item.product_id)}
           className="text-muted-foreground hover:text-destructive"
         >
           <X className="h-5 w-5" />

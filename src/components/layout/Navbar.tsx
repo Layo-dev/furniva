@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import logo from "@/assets/logo.svg";
 
 const navLinks = [
@@ -18,6 +20,8 @@ const navLinks = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
 
   // Guest goes to /auth, logged in user goes to /account
   const accountLink = user ? "/account" : "/auth";
@@ -63,17 +67,24 @@ export const Navbar = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+            <Button variant="ghost" size="icon" className="hidden md:flex relative" asChild>
               <Link to="/wishlist">
                 <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {wishlistCount > 99 ? "99+" : wishlistCount}
+                  </span>
+                )}
               </Link>
             </Button>
             <Button variant="ghost" size="icon" className="relative" asChild>
               <Link to="/cart">
                 <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  0
-                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
               </Link>
             </Button>
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
@@ -126,9 +137,14 @@ export const Navbar = () => {
                 <Button variant="ghost" size="icon">
                   <Search className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon" asChild>
+                <Button variant="ghost" size="icon" className="relative" asChild>
                   <Link to="/wishlist" onClick={() => setIsOpen(false)}>
                     <Heart className="h-5 w-5" />
+                    {wishlistCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-cta text-cta-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                        {wishlistCount > 99 ? "99+" : wishlistCount}
+                      </span>
+                    )}
                   </Link>
                 </Button>
                 <Button variant="ghost" size="icon" asChild>

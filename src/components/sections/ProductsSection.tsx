@@ -2,6 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Expand, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import ProductImageDialog from "@/components/product/ProductImageDialog";
 
 const filters = ["All Products", "Latest Products", "Best Sellers", "Featured Products"];
 
@@ -98,6 +101,8 @@ const products = [
 
 export const ProductsSection = () => {
   const [activeFilter, setActiveFilter] = useState("All Products");
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
   return (
     <section className="py-16 md:py-24 bg-background">
@@ -179,14 +184,62 @@ export const ProductsSection = () => {
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                     className="absolute inset-0 bg-foreground/20 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={(e) => e.preventDefault()}
                   >
-                    <Button size="icon" variant="secondary" className="rounded-full">
-                      <Heart className="h-4 w-4" />
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className={`rounded-full ${
+                        isInWishlist(product.id.toString())
+                          ? "bg-cta text-cta-foreground"
+                          : ""
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (isInWishlist(product.id.toString())) {
+                          removeFromWishlist(product.id.toString());
+                        } else {
+                          addToWishlist({
+                            product_id: product.id.toString(),
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                          });
+                        }
+                      }}
+                    >
+                      <Heart
+                        className={`h-4 w-4 ${
+                          isInWishlist(product.id.toString()) ? "fill-current" : ""
+                        }`}
+                      />
                     </Button>
-                    <Button size="icon" variant="secondary" className="rounded-full">
-                      <Expand className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" className="rounded-full bg-cta hover:bg-cta/90">
+                    
+                    <ProductImageDialog
+                      image={product.image}
+                      productName={product.name}
+                      trigger={
+                        <Button size="icon" variant="secondary" className="rounded-full">
+                          <Expand className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
+                    
+                    <Button
+                      size="icon"
+                      className="rounded-full bg-cta hover:bg-cta/90"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await addToCart({
+                          product_id: product.id.toString(),
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                        });
+                      }}
+                    >
                       <ShoppingCart className="h-4 w-4 text-cta-foreground" />
                     </Button>
                   </motion.div>

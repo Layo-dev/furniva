@@ -7,21 +7,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import WishlistItem from "./WishlistItem";
-
-interface WishlistItemType {
-  id: number;
-  name: string;
-  color: string;
-  price: number;
-  dateAdded: string;
-  inStock: boolean;
-  image: string;
-}
+import { WishlistItem as WishlistItemType } from "@/contexts/WishlistContext";
 
 interface WishlistTableProps {
   items: WishlistItemType[];
-  onRemove: (id: number) => void;
-  onAddToCart: (id: number) => void;
+  onRemove: (productId: string) => void;
+  onAddToCart: (productId: string) => void;
 }
 
 const WishlistTable = ({ items, onRemove, onAddToCart }: WishlistTableProps) => {
@@ -70,7 +61,7 @@ const WishlistTable = ({ items, onRemove, onAddToCart }: WishlistTableProps) => 
           {items.map((item) => (
             <WishlistItem
               key={item.id}
-              {...item}
+              item={item}
               onRemove={onRemove}
               onAddToCart={onAddToCart}
             />

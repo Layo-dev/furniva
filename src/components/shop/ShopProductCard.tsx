@@ -2,6 +2,10 @@ import { motion } from "framer-motion";
 import { Heart, Expand, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import ProductImageDialog from "@/components/product/ProductImageDialog";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -21,6 +25,43 @@ interface ShopProductCardProps {
 }
 
 const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id.toString());
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!product.inStock) {
+      toast.error("Product is out of stock");
+      return;
+    }
+
+    await addToCart({
+      product_id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    });
+  };
+
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (inWishlist) {
+      await removeFromWishlist(product.id.toString());
+    } else {
+      await addToWishlist({
+        product_id: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+    }
+  };
+
   return (
     <Link to={`/product/${product.id}`}>
       <motion.div
@@ -59,25 +100,41 @@ const ShopProductCard = ({ product, index }: ShopProductCardProps) => {
           initial={{ opacity: 0, x: 20 }}
           whileHover={{ opacity: 1, x: 0 }}
           className="absolute right-3 top-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => e.preventDefault()}
         >
           <Button
             size="icon"
             variant="secondary"
-            className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+            className={`w-9 h-9 rounded-full bg-background shadow-md ${
+              inWishlist
+                ? "bg-cta text-cta-foreground"
+                : "hover:bg-cta hover:text-cta-foreground"
+            }`}
+            onClick={handleWishlistToggle}
           >
-            <Heart className="w-4 h-4" />
+            <Heart className={`w-4 h-4 ${inWishlist ? "fill-current" : ""}`} />
           </Button>
+          
+          <ProductImageDialog
+            image={product.image}
+            productName={product.name}
+            trigger={
+              <Button
+                size="icon"
+                variant="secondary"
+                className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+              >
+                <Expand className="w-4 h-4" />
+              </Button>
+            }
+          />
+          
           <Button
             size="icon"
             variant="secondary"
             className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
-          >
-            <Expand className="w-4 h-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="secondary"
-            className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
           >
             <ShoppingCart className="w-4 h-4" />
           </Button>

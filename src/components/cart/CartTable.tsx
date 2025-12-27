@@ -3,8 +3,8 @@ import CartItem, { CartItemData } from "./CartItem";
 
 interface CartTableProps {
   items: CartItemData[];
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  onRemove: (id: number) => void;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (productId: string) => void;
 }
 
 const CartTable = ({ items, onUpdateQuantity, onRemove }: CartTableProps) => {
