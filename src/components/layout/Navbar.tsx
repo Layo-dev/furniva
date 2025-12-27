@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.svg";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -27,8 +28,8 @@ export const Navbar = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <motion.div whileHover={{ scale: 1.02 }}>
-            <Link to="/" className="text-2xl md:text-3xl font-bold text-foreground">
-              Furniva
+            <Link to="/">
+              <img src={logo} alt="Furniva" className="h-8 md:h-10" />
             </Link>
           </motion.div>
 
