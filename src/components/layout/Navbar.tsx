@@ -53,7 +53,7 @@ export const Navbar = () => {
               >
                 <Link
                   to={link.href}
-                  className="body-2 text-muted-foreground hover:text-foreground transition-colors relative group"
+                  className="body-2 font-medium hover:text-foreground transition-colors relative group"
                 >
                   {link.name}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300" />
@@ -126,7 +126,7 @@ export const Navbar = () => {
                 >
                   <Link
                     to={link.href}
-                    className="body-1 text-foreground py-2 block"
+                    className="body-1 font-medium py-2 block"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.name}
