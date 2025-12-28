@@ -180,11 +180,73 @@ export const ProductsSection = () => {
                     </span>
                   )}
 
-                  {/* Hover Actions */}
+                  {/* Mobile/Tablet Action Icons - Always Visible */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 lg:hidden">
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className={`w-9 h-9 rounded-full bg-background shadow-md ${
+                        isInWishlist(product.id.toString())
+                          ? "bg-cta text-cta-foreground"
+                          : "hover:bg-cta hover:text-cta-foreground"
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (isInWishlist(product.id.toString())) {
+                          removeFromWishlist(product.id.toString());
+                        } else {
+                          addToWishlist({
+                            product_id: product.id.toString(),
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                          });
+                        }
+                      }}
+                    >
+                      <Heart
+                        className={`h-4 w-4 ${
+                          isInWishlist(product.id.toString()) ? "fill-current" : ""
+                        }`}
+                      />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigate(`/product/${product.id}`);
+                      }}
+                    >
+                      <Expand className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="secondary"
+                      className="w-9 h-9 rounded-full bg-background hover:bg-cta hover:text-cta-foreground shadow-md"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await addToCart({
+                          product_id: product.id.toString(),
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                        });
+                      }}
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* Desktop Hover Actions */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
-                    className="absolute inset-0 bg-foreground/20 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute inset-0 bg-foreground/20 items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:flex"
                     onClick={(e) => e.preventDefault()}
                   >
                     <Button
