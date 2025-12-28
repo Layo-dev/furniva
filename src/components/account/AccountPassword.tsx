@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const passwordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
@@ -26,6 +28,8 @@ const passwordSchema = z.object({
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 const AccountPassword = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
@@ -35,10 +39,24 @@ const AccountPassword = () => {
     },
   });
 
-  const onSubmit = (data: PasswordFormData) => {
-    console.log("Password update:", data);
-    toast.success("Password updated successfully!");
-    form.reset();
+  const onSubmit = async (data: PasswordFormData) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: data.newPassword
+      });
+      
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Password updated successfully!");
+        form.reset();
+      }
+    } catch {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -96,9 +114,10 @@ const AccountPassword = () => {
 
           <Button
             type="submit"
+            disabled={isLoading}
             className="bg-accent hover:bg-accent/90 text-accent-foreground px-8"
           >
-            Update Password
+            {isLoading ? "Updating..." : "Update Password"}
           </Button>
         </form>
       </Form>
