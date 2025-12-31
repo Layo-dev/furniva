@@ -10,7 +10,6 @@ const testimonials = [
     profession: "Interior Designer",
     rating: 5,
     quote: "Furniva has completely transformed how I source furniture for my clients. The quality is exceptional, and the variety is unmatched. Highly recommended!",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces",
   },
   {
     id: 2,
@@ -106,13 +105,6 @@ export const TestimonialsSection = () => {
 
                   {/* Author */}
                   <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <img
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover ring-2 ring-accent"
-                      />
-                    </div>
                     <div>
                       <p className="body-2-bold text-foreground">{testimonial.name}</p>
                       <p className="body-3 text-muted-foreground">{testimonial.profession}</p>

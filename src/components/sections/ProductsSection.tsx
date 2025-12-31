@@ -137,7 +137,7 @@ export const ProductsSection = () => {
               className={`body-3 ${
                 activeFilter === filter
                   ? "bg-accent text-accent-foreground"
-                  : "border-border text-muted-foreground hover:text-foreground"
+                  : "border-border text-muted-foreground hover:text-[#ffffff]"
               }`}
             >
               {filter}

@@ -29,9 +29,11 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full w-fit mb-6"
+              className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full w-fit mb-6 h-10"
             >
-              <Armchair className="h-4 w-4 text-accent" />
+              <div className="w-10 h-10 bg-[#f5c518] rounded-full flex items-center justify-center shrink-0 -my-2 -ml-4">
+                <Armchair className="h-5 w-5 text-accent" />
+              </div>
               <span className="body-3 text-foreground">The Best Online Furniture Store</span>
             </motion.div>
 
